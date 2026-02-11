@@ -7,10 +7,11 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Success Message -->
-            @if(session('success'))
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative dark:bg-green-900 dark:border-green-700 dark:text-green-200" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+            <!-- Success/Error Messages -->
+            <x-success-alert />
+            @if(session('error'))
+                <div class="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg">
+                    {{ session('error') }}
                 </div>
             @endif
 
@@ -28,7 +29,7 @@
                                             Renter
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Message
+                                            Payment
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                             Status
@@ -49,7 +50,7 @@
                                                     {{ $booking->room->title }}
                                                 </div>
                                                 <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                    {{ $booking->room->city }}
+                                                    {{ $booking->room->city }} &middot; NPR {{ number_format($booking->room->rent_price) }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
@@ -65,40 +66,61 @@
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                                {{ $booking->message ?? 'N/A' }}
+                                            <td class="px-6 py-4">
+                                                @if($booking->payment_screenshot)
+                                                    <a href="{{ route('owner.bookings.show', $booking) }}" class="inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                        </svg>
+                                                        View Proof
+                                                    </a>
+                                                    @if($booking->paid_at)
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            Paid: {{ $booking->paid_at->format('M d, Y H:i') }}
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    <span class="text-sm text-gray-400">No payment</span>
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                    @if($booking->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                                                    @elseif($booking->status === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                                    @elseif($booking->status === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                                                    @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
-                                                    @endif">
-                                                    {{ ucfirst($booking->status) }}
-                                                </span>
+                                                <x-booking-status-badge :status="$booking->status" />
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                                 {{ \Carbon\Carbon::parse($booking->requested_at)->format('M d, Y H:i') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                @if($booking->status === 'pending')
-                                                    <form action="{{ route('owner.bookings.approve', $booking) }}" method="POST" class="inline mr-2">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" onclick="return confirm('Approve this booking? The room will be marked as booked.')">
-                                                            Approve
-                                                        </button>
-                                                    </form>
-                                                    <form action="{{ route('owner.bookings.reject', $booking) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" onclick="return confirm('Reject this booking?')">
-                                                            Reject
-                                                        </button>
-                                                    </form>
+                                                @if($booking->status === 'paid')
+                                                    <div class="flex items-center gap-2">
+                                                        <form action="{{ route('owner.bookings.approve', $booking) }}" method="POST" class="inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition" onclick="return confirm('Approve this booking? You are confirming the payment is valid.')">
+                                                                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('owner.bookings.reject', $booking) }}" method="POST" class="inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition" onclick="return confirm('Reject this booking? The room will become available again.')">
+                                                                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                                Reject
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                @elseif($booking->status === 'approved')
+                                                    <span class="inline-flex items-center text-green-600 dark:text-green-400 text-xs">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                        Confirmed
+                                                    </span>
+                                                @elseif($booking->status === 'pending')
+                                                    <span class="inline-flex items-center text-yellow-600 dark:text-yellow-400 text-xs">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                        Awaiting Payment
+                                                    </span>
                                                 @else
-                                                    <span class="text-gray-500 dark:text-gray-400">No actions</span>
+                                                    <span class="text-gray-500 dark:text-gray-400 text-xs">{{ ucfirst($booking->status) }}</span>
                                                 @endif
                                             </td>
                                         </tr>

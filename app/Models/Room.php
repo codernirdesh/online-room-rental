@@ -18,6 +18,7 @@ class Room extends Model
         'rent_price',
         'room_type',
         'amenities',
+        'image',
         'available_from',
         'status',
     ];
@@ -35,5 +36,32 @@ class Room extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Check if the room has an active booking (paid or approved).
+     */
+    public function hasActiveBooking(): bool
+    {
+        return $this->bookings()->active()->exists();
+    }
+
+    /**
+     * Check if the room is available for booking.
+     */
+    public function isBookable(): bool
+    {
+        return $this->status === 'available' && !$this->hasActiveBooking();
+    }
+
+    /**
+     * Scope for rooms available for booking.
+     */
+    public function scopeBookable($query)
+    {
+        return $query->where('status', 'available')
+            ->whereDoesntHave('bookings', function ($q) {
+                $q->whereIn('status', ['paid', 'approved']);
+            });
     }
 }

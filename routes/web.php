@@ -24,17 +24,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('my-bookings');
     
     // Renter routes
     Route::middleware('role:renter')->group(function () {
+        Route::get('/checkout/{room}', [BookingController::class, 'checkout'])->name('bookings.checkout');
         Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-        Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('my-bookings');
     });
     
     // Owner routes
     Route::middleware('role:owner')->prefix('owner')->name('owner.')->group(function () {
         Route::resource('rooms', OwnerRoomController::class);
         Route::get('/bookings', [OwnerBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [OwnerBookingController::class, 'show'])->name('bookings.show');
         Route::patch('/bookings/{booking}/approve', [OwnerBookingController::class, 'approve'])->name('bookings.approve');
         Route::patch('/bookings/{booking}/reject', [OwnerBookingController::class, 'reject'])->name('bookings.reject');
     });
@@ -43,10 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('users', AdminUserController::class)->except(['create', 'store', 'show']);
-        Route::get('/rooms', [AdminRoomController::class, 'index'])->name('rooms.index');
+        Route::resource('rooms', AdminRoomController::class);
         Route::patch('/rooms/{room}/deactivate', [AdminRoomController::class, 'deactivate'])->name('rooms.deactivate');
         Route::patch('/rooms/{room}/activate', [AdminRoomController::class, 'activate'])->name('rooms.activate');
         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
+        Route::patch('/bookings/{booking}/approve', [AdminBookingController::class, 'approve'])->name('bookings.approve');
+        Route::patch('/bookings/{booking}/reject', [AdminBookingController::class, 'reject'])->name('bookings.reject');
     });
 });
 

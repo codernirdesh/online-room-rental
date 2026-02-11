@@ -12,7 +12,7 @@ class RoomController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Room::where('status', 'available')
+        $query = Room::where('status', '!=', 'inactive')
             ->with('owner');
 
         // Filter by city
@@ -46,7 +46,15 @@ class RoomController extends Controller
     public function show(Room $room)
     {
         $room->load('owner');
-        
-        return view('rooms.show', compact('room'));
+
+        $userBooking = null;
+        if (auth()->check() && auth()->user()->role === 'renter') {
+            $userBooking = $room->bookings()
+                ->where('renter_id', auth()->id())
+                ->whereIn('status', ['paid', 'approved'])
+                ->first();
+        }
+
+        return view('rooms.show', compact('room', 'userBooking'));
     }
 }

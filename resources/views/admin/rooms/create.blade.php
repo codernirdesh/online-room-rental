@@ -1,26 +1,53 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Add New Room') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Add New Room') }}
+            </h2>
+            <a href="{{ route('admin.rooms.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                &larr; Back to Rooms
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <form action="{{ route('owner.rooms.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.rooms.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        <!-- Owner Selection -->
+                        <div class="mb-4">
+                            <label for="owner_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Room Owner <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="owner_id"
+                                id="owner_id"
+                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
+                                required>
+                                <option value="">Select Owner</option>
+                                @foreach($owners as $owner)
+                                    <option value="{{ $owner->id }}" {{ old('owner_id') == $owner->id ? 'selected' : '' }}>
+                                        {{ $owner->name }} ({{ $owner->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('owner_id')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                         <!-- Title -->
                         <div class="mb-4">
                             <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Room Title <span class="text-red-500">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                name="title" 
-                                id="title" 
+                            <input
+                                type="text"
+                                name="title"
+                                id="title"
                                 value="{{ old('title') }}"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                 required>
@@ -34,9 +61,9 @@
                             <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Description <span class="text-red-500">*</span>
                             </label>
-                            <textarea 
-                                name="description" 
-                                id="description" 
+                            <textarea
+                                name="description"
+                                id="description"
                                 rows="4"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                 required>{{ old('description') }}</textarea>
@@ -50,10 +77,10 @@
                             <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Room Image
                             </label>
-                            <input 
-                                type="file" 
-                                name="image" 
-                                id="image" 
+                            <input
+                                type="file"
+                                name="image"
+                                id="image"
                                 accept="image/*"
                                 class="w-full text-sm text-gray-500 dark:text-gray-400
                                     file:mr-4 file:py-2 file:px-4
@@ -73,10 +100,10 @@
                             <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Address <span class="text-red-500">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                name="address" 
-                                id="address" 
+                            <input
+                                type="text"
+                                name="address"
+                                id="address"
                                 value="{{ old('address') }}"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                 required>
@@ -91,10 +118,10 @@
                                 <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     City <span class="text-red-500">*</span>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    name="city" 
-                                    id="city" 
+                                <input
+                                    type="text"
+                                    name="city"
+                                    id="city"
                                     value="{{ old('city') }}"
                                     class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                     required>
@@ -106,10 +133,10 @@
                                 <label for="province" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Province <span class="text-red-500">*</span>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    name="province" 
-                                    id="province" 
+                                <input
+                                    type="text"
+                                    name="province"
+                                    id="province"
                                     value="{{ old('province') }}"
                                     class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                     required>
@@ -125,10 +152,10 @@
                                 <label for="rent_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Rent Price (NPR) <span class="text-red-500">*</span>
                                 </label>
-                                <input 
-                                    type="number" 
-                                    name="rent_price" 
-                                    id="rent_price" 
+                                <input
+                                    type="number"
+                                    name="rent_price"
+                                    id="rent_price"
                                     value="{{ old('rent_price') }}"
                                     step="0.01"
                                     min="0"
@@ -142,8 +169,8 @@
                                 <label for="room_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Room Type <span class="text-red-500">*</span>
                                 </label>
-                                <select 
-                                    name="room_type" 
+                                <select
+                                    name="room_type"
                                     id="room_type"
                                     class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                     required>
@@ -162,16 +189,15 @@
                         <!-- Amenities -->
                         <div class="mb-4">
                             <label for="amenities" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Amenities <span class="text-red-500">*</span>
+                                Amenities
                             </label>
-                            <input 
-                                type="text" 
-                                name="amenities" 
-                                id="amenities" 
+                            <input
+                                type="text"
+                                name="amenities"
+                                id="amenities"
                                 value="{{ old('amenities') }}"
                                 placeholder="e.g., WiFi, Parking, 24/7 Water"
-                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
-                                required>
+                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600">
                             @error('amenities')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -182,10 +208,10 @@
                             <label for="available_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Available From <span class="text-red-500">*</span>
                             </label>
-                            <input 
-                                type="date" 
-                                name="available_from" 
-                                id="available_from" 
+                            <input
+                                type="date"
+                                name="available_from"
+                                id="available_from"
                                 value="{{ old('available_from') }}"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                 required>
@@ -199,8 +225,8 @@
                             <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Status <span class="text-red-500">*</span>
                             </label>
-                            <select 
-                                name="status" 
+                            <select
+                                name="status"
                                 id="status"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 dark:focus:border-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                                 required>
@@ -217,7 +243,7 @@
                             <button type="submit" class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition">
                                 Create Room
                             </button>
-                            <a href="{{ route('owner.rooms.index') }}" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                            <a href="{{ route('admin.rooms.index') }}" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition">
                                 Cancel
                             </a>
                         </div>

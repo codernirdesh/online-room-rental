@@ -17,8 +17,8 @@
                                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Users</p>
                                 <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ $totalUsers }}</p>
                             </div>
-                            <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
-                                <svg class="w-8 h-8 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-3 bg-primary-100 dark:bg-primary-900 rounded-full">
+                                <svg class="w-8 h-8 text-primary-600 dark:text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
                             </div>
@@ -51,8 +51,8 @@
                                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Renters</p>
                                 <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ $totalRenters }}</p>
                             </div>
-                            <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-full">
-                                <svg class="w-8 h-8 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-full">
+                                <svg class="w-8 h-8 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
                             </div>
@@ -88,8 +88,8 @@
                                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Bookings</p>
                                 <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ $totalBookings }}</p>
                             </div>
-                            <div class="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-full">
-                                <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-3 bg-primary-100 dark:bg-primary-900 rounded-full">
+                                <svg class="w-8 h-8 text-primary-600 dark:text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                 </svg>
                             </div>
@@ -137,8 +137,8 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <a href="{{ route('admin.users.index') }}" class="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition">
-                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ route('admin.users.index') }}" class="flex items-center p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition">
+                            <svg class="w-6 h-6 text-primary-600 dark:text-primary-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                             </svg>
                             <span class="font-medium text-gray-900 dark:text-gray-100">Manage Users</span>
@@ -151,8 +151,8 @@
                             <span class="font-medium text-gray-900 dark:text-gray-100">Manage Rooms</span>
                         </a>
 
-                        <a href="{{ route('admin.bookings.index') }}" class="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition">
-                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ route('admin.bookings.index') }}" class="flex items-center p-4 bg-gray-50 dark:bg-gray-700/20 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/30 transition">
+                            <svg class="w-6 h-6 text-gray-600 dark:text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                             <span class="font-medium text-gray-900 dark:text-gray-100">View Bookings</span>

@@ -8,11 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Success Message -->
-            @if(session('success'))
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative dark:bg-green-900 dark:border-green-700 dark:text-green-200" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
+            <x-success-alert />
 
             <!-- Users Table -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -61,19 +57,13 @@
                                                 {{ $user->phone ?? 'N/A' }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                    @if($user->role === 'admin') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                                                    @elseif($user->role === 'owner') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                                                    @else bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                                    @endif">
-                                                    {{ ucfirst($user->role) }}
-                                                </span>
+                                                <x-role-badge :role="$user->role" />
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                                 {{ \Carbon\Carbon::parse($user->created_at)->format('M d, Y') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="{{ route('admin.users.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">
+                                                <a href="{{ route('admin.users.edit', $user) }}" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">
                                                     Edit
                                                 </a>
                                                 @if($user->id !== auth()->id())

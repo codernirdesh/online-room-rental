@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('My Rooms') }}
             </h2>
-            <a href="{{ route('owner.rooms.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition">
+            <a href="{{ route('owner.rooms.create') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -16,11 +16,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Success Message -->
-            @if(session('success'))
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative dark:bg-green-900 dark:border-green-700 dark:text-green-200" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
+            <x-success-alert />
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
@@ -28,18 +24,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($rooms as $room)
                                 <div class="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden shadow">
+                                    <!-- Image Thumbnail -->
+                                    <div class="h-48 overflow-hidden">
+                                        @if($room->image)
+                                            <img src="{{ asset('storage/' . $room->image) }}" alt="{{ $room->title }}" class="w-full h-full object-cover">
+                                        @else
+                                            <x-room-image-placeholder class="w-full h-full" />
+                                        @endif
+                                    </div>
+                                    
                                     <div class="p-6">
                                         <div class="flex justify-between items-start mb-2">
                                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                                 {{ $room->title }}
                                             </h3>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                @if($room->status === 'available') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                                @elseif($room->status === 'booked') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200
-                                                @endif">
-                                                {{ ucfirst($room->status) }}
-                                            </span>
+                                            <x-room-status-badge :status="$room->status" />
                                         </div>
                                         
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -60,16 +59,24 @@
                                                 </svg>
                                                 {{ ucfirst($room->room_type) }}
                                             </div>
-                                            <div class="flex items-center text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                                            <div class="flex items-center text-lg font-bold text-primary-600 dark:text-primary-400">
                                                 NPR {{ number_format($room->rent_price, 2) }}
                                             </div>
                                         </div>
 
+                                        {{-- Booking count indicator --}}
+                                        @if($room->bookings_count > 0)
+                                            <div class="flex items-center gap-1.5 text-sm text-primary-600 dark:text-primary-400 mb-3 font-medium">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                                {{ $room->bookings_count }} {{ Str::plural('booking', $room->bookings_count) }}
+                                            </div>
+                                        @endif
+
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('rooms.show', $room) }}" class="flex-1 text-center px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                                            <a href="{{ route('owner.rooms.show', $room) }}" class="flex-1 text-center px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition">
                                                 View
                                             </a>
-                                            <a href="{{ route('owner.rooms.edit', $room) }}" class="flex-1 text-center px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 transition">
+                                            <a href="{{ route('owner.rooms.edit', $room) }}" class="flex-1 text-center px-3 py-2 bg-primary-600 text-white rounded-md text-sm hover:bg-primary-700 transition">
                                                 Edit
                                             </a>
                                             <form action="{{ route('owner.rooms.destroy', $room) }}" method="POST" class="flex-1">
@@ -96,7 +103,7 @@
                             </svg>
                             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">You haven't added any rooms yet.</p>
                             <div class="mt-4">
-                                <a href="{{ route('owner.rooms.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition">
+                                <a href="{{ route('owner.rooms.create') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition">
                                     Add Your First Room
                                 </a>
                             </div>

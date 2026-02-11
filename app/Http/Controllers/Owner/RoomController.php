@@ -34,16 +34,37 @@ class RoomController extends Controller
             'rent_price' => 'required|numeric|min:0',
             'room_type' => 'required|in:single,double,flat,apartment',
             'amenities' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'available_from' => 'required|date',
             'status' => 'required|in:available,booked,inactive',
         ]);
 
         $validated['owner_id'] = auth()->id();
 
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('rooms', 'public');
+            $validated['image'] = $imagePath;
+        }
+
         Room::create($validated);
 
         return redirect()->route('owner.rooms.index')
             ->with('success', 'Room created successfully!');
+    }
+
+    public function show(Room $room)
+    {
+        if ($room->owner_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $room->load('owner');
+        $bookings = $room->bookings()
+            ->with('renter')
+            ->latest('requested_at')
+            ->get();
+
+        return view('owner.rooms.show', compact('room', 'bookings'));
     }
 
     public function edit(Room $room)
@@ -70,9 +91,19 @@ class RoomController extends Controller
             'rent_price' => 'required|numeric|min:0',
             'room_type' => 'required|in:single,double,flat,apartment',
             'amenities' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'available_from' => 'required|date',
             'status' => 'required|in:available,booked,inactive',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($room->image && \Storage::disk('public')->exists($room->image)) {
+                \Storage::disk('public')->delete($room->image);
+            }
+            $imagePath = $request->file('image')->store('rooms', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $room->update($validated);
 
