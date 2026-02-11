@@ -12,11 +12,14 @@ class Booking extends Model
         'renter_id',
         'message',
         'status',
+        'payment_screenshot',
+        'paid_at',
         'requested_at',
     ];
 
     protected $casts = [
         'requested_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     public function room(): BelongsTo
@@ -27,5 +30,21 @@ class Booking extends Model
     public function renter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'renter_id');
+    }
+
+    /**
+     * Check if this booking has an active payment (paid or approved).
+     */
+    public function isActive(): bool
+    {
+        return in_array($this->status, ['paid', 'approved']);
+    }
+
+    /**
+     * Scope for bookings that lock a room (paid or approved).
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', ['paid', 'approved']);
     }
 }

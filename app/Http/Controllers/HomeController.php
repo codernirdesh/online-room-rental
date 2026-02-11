@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $latestRooms = Room::where('status', 'available')
+        $latestRooms = Room::where('status', '!=', 'inactive')
             ->with('owner')
             ->latest()
             ->take(6)

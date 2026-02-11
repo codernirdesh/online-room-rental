@@ -146,7 +146,9 @@ class DatabaseSeeder extends Seeder
             'room_id' => $room1->id,
             'renter_id' => $renter1->id,
             'message' => 'I am interested in this room. Can we schedule a visit?',
-            'status' => 'pending',
+            'status' => 'paid',
+            'payment_screenshot' => 'payments/sample1.png',
+            'paid_at' => now(),
             'requested_at' => now(),
         ]);
 
@@ -155,6 +157,8 @@ class DatabaseSeeder extends Seeder
             'renter_id' => $renter2->id,
             'message' => 'Looking for a flat in Pokhara. This looks perfect!',
             'status' => 'approved',
+            'payment_screenshot' => 'payments/sample2.png',
+            'paid_at' => now()->subDays(3),
             'requested_at' => now()->subDays(2),
         ]);
 
@@ -162,7 +166,9 @@ class DatabaseSeeder extends Seeder
             'room_id' => $room4->id,
             'renter_id' => $renter3->id,
             'message' => 'Need a family apartment. When can I move in?',
-            'status' => 'pending',
+            'status' => 'paid',
+            'payment_screenshot' => 'payments/sample3.png',
+            'paid_at' => now()->subDays(1),
             'requested_at' => now()->subDays(1),
         ]);
 
@@ -171,6 +177,8 @@ class DatabaseSeeder extends Seeder
             'renter_id' => $renter1->id,
             'message' => 'Interested in the mountain view room.',
             'status' => 'rejected',
+            'payment_screenshot' => 'payments/sample4.png',
+            'paid_at' => now()->subDays(6),
             'requested_at' => now()->subDays(5),
         ]);
     }
