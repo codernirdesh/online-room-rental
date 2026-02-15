@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Room;
 use App\Models\Booking;
+use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -181,5 +182,8 @@ class DatabaseSeeder extends Seeder
             'paid_at' => now()->subDays(6),
             'requested_at' => now()->subDays(5),
         ]);
+
+        // Create default settings
+        Setting::set('payment_qr', null); // Admin will upload QR from settings page
     }
 }

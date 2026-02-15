@@ -16,6 +16,14 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Phone Number -->
+        <div class="mt-4">
+            <x-input-label for="phone" :value="__('Phone Number')" />
+            <x-text-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone')" required maxlength="10" pattern="[0-9]{10}" placeholder="e.g. 98XXXXXXXX" />
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be exactly 10 digits.</p>
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
@@ -25,6 +33,7 @@
                             name="password"
                             required autocomplete="new-password" />
 
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Min 8 characters with uppercase, lowercase, number & symbol.</p>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 

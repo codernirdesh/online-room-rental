@@ -24,6 +24,7 @@
                         <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-500 transition font-medium' }}">Users</a>
                         <a href="{{ route('admin.rooms.index') }}" class="{{ request()->routeIs('admin.rooms.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-500 transition font-medium' }}">Rooms</a>
                         <a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-500 transition font-medium' }}">Bookings</a>
+                        <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-500 transition font-medium' }}">Settings</a>
                     @endif
 
                     <!-- User Dropdown -->
@@ -33,6 +34,7 @@
                                 <span class="text-primary-600 dark:text-primary-400 font-bold text-xs">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                             </div>
                             <span>{{ Auth::user()->name }}</span>
+                            <x-role-badge :role="Auth::user()->role" />
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
 
@@ -79,6 +81,7 @@
                     <a href="{{ route('admin.users.index') }}" class="block py-2 {{ request()->routeIs('admin.users.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 font-medium' }}">Users</a>
                     <a href="{{ route('admin.rooms.index') }}" class="block py-2 {{ request()->routeIs('admin.rooms.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 font-medium' }}">Rooms</a>
                     <a href="{{ route('admin.bookings.index') }}" class="block py-2 {{ request()->routeIs('admin.bookings.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 font-medium' }}">Bookings</a>
+                    <a href="{{ route('admin.settings.index') }}" class="block py-2 {{ request()->routeIs('admin.settings.*') ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 font-medium' }}">Settings</a>
                 @endif
 
                 <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
@@ -89,6 +92,7 @@
                         <div>
                             <div class="font-medium text-sm text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                             <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
+                            <div class="mt-1"><x-role-badge :role="Auth::user()->role" /></div>
                         </div>
                     </div>
                     <a href="{{ route('profile.edit') }}" class="block py-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 font-medium">Profile</a>

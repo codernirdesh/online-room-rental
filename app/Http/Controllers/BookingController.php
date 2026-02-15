@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Room;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -18,7 +19,9 @@ class BookingController extends Controller
                 ->with('error', 'This room is not available for booking.');
         }
 
-        return view('bookings.checkout', compact('room'));
+        $paymentQr = Setting::get('payment_qr');
+
+        return view('bookings.checkout', compact('room', 'paymentQr'));
     }
 
     /**
