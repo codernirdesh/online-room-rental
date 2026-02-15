@@ -85,8 +85,8 @@
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 text-center">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Scan QR to Pay</h3>
                         <div class="inline-block bg-white p-4 rounded-xl shadow-inner mb-4">
-                            @if(file_exists(public_path('images/payment-qr.png')))
-                                <img src="{{ asset('images/payment-qr.png') }}" alt="Payment QR Code" class="w-64 h-64 object-contain mx-auto">
+                            @if($paymentQr)
+                                <img src="{{ asset('storage/' . $paymentQr) }}" alt="Payment QR Code" class="w-64 h-64 object-contain mx-auto">
                             @else
                                 {{-- Placeholder QR if no image is set --}}
                                 <div class="w-64 h-64 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center">

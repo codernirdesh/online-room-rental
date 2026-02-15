@@ -74,9 +74,10 @@
 
                             <div>
                                 <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Phone Number</label>
-                                <input type="text" id="phone" name="phone" value="{{ old('phone', $user->phone) }}"
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" required
                                     class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500"
-                                    placeholder="e.g. 98XXXXXXXX">
+                                    placeholder="e.g. 98XXXXXXXX" maxlength="10" pattern="[0-9]{10}">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be exactly 10 digits.</p>
                                 @error('phone')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
@@ -118,6 +119,7 @@
                                 <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">New Password</label>
                                 <input type="password" id="password" name="password" autocomplete="new-password"
                                     class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Min 8 characters with uppercase, lowercase, number & symbol.</p>
                                 @error('password', 'updatePassword')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
