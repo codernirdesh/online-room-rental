@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,23 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Check if the user's email is verified
+        $user = User::where('email', $this->input('email'))->first();
+
+        if ($user && !$user->email_verified_at) {
+            Auth::guard('web')->logout();
+
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            // Store email in session so user can be redirected to OTP page
+            $this->session()->put('otp_verification_email', $user->email);
+
+            throw ValidationException::withMessages([
+                'email' => 'Your email address is not verified. Please check your email for the OTP code or <a href="' . route('otp.show') . '" class="underline font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-800">click here to verify</a>.',
             ]);
         }
 
