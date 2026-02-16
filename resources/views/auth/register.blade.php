@@ -24,6 +24,17 @@
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
+        <!-- Role Selection -->
+        <div class="mt-4">
+            <x-input-label for="role" :value="__('Register As')" />
+            <select id="role" name="role" required
+                class="block mt-1 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                <option value="renter" {{ old('role') === 'renter' ? 'selected' : '' }}>Renter</option>
+                <option value="owner" {{ old('role') === 'owner' ? 'selected' : '' }}>Owner</option>
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
@@ -33,7 +44,7 @@
                             name="password"
                             required autocomplete="new-password" />
 
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Min 8 characters with uppercase, lowercase, number & symbol.</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Min 8 characters with uppercase, lowercase, number & symbol. Must not contain your name or email.</p>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
