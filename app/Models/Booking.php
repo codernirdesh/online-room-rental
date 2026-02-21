@@ -13,6 +13,10 @@ class Booking extends Model
         'message',
         'status',
         'payment_screenshot',
+        'payment_method',
+        'esewa_transaction_id',
+        'esewa_amount',
+        'esewa_ref_id',
         'paid_at',
         'requested_at',
     ];
@@ -20,6 +24,7 @@ class Booking extends Model
     protected $casts = [
         'requested_at' => 'datetime',
         'paid_at' => 'datetime',
+        'esewa_amount' => 'decimal:2',
     ];
 
     public function room(): BelongsTo

@@ -70,6 +70,36 @@
                                 </div>
                             @endif
 
+                            @if($booking->payment_method)
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Payment Method</p>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $booking->payment_method === 'esewa' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' }}">
+                                        {{ $booking->payment_method === 'esewa' ? 'eSewa' : 'QR Code' }}
+                                    </span>
+                                </div>
+                            @endif
+
+                            @if($booking->esewa_transaction_id)
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">eSewa Transaction ID</p>
+                                    <p class="text-gray-900 dark:text-white font-mono text-sm">{{ $booking->esewa_transaction_id }}</p>
+                                </div>
+                            @endif
+
+                            @if($booking->esewa_ref_id)
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">eSewa Reference ID</p>
+                                    <p class="text-gray-900 dark:text-white font-mono text-sm">{{ $booking->esewa_ref_id }}</p>
+                                </div>
+                            @endif
+
+                            @if($booking->esewa_amount)
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">eSewa Amount</p>
+                                    <p class="text-gray-900 dark:text-white font-medium">NPR {{ number_format($booking->esewa_amount) }}</p>
+                                </div>
+                            @endif
+
                             @if($booking->message)
                                 <div>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Message from Renter</p>
@@ -102,12 +132,21 @@
                     </div>
                 </div>
 
-                <!-- Payment Screenshot -->
+                <!-- Payment Proof -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment Proof</h3>
 
-                        @if($booking->payment_screenshot)
+                        @if($booking->payment_method === 'esewa' && $booking->esewa_ref_id)
+                            <div class="text-center py-8 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <svg class="mx-auto h-12 w-12 text-green-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                                <p class="text-sm font-medium text-green-700 dark:text-green-300">Paid via eSewa</p>
+                                <p class="text-xs text-green-600 dark:text-green-400 mt-1">Payment verified electronically</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">Ref: {{ $booking->esewa_ref_id }}</p>
+                            </div>
+                        @elseif($booking->payment_screenshot)
                             <div class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                                 <img
                                     src="{{ asset('storage/' . $booking->payment_screenshot) }}"

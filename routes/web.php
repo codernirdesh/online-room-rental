@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EsewaPaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -26,11 +27,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('my-bookings');
+
+    // eSewa callback routes (accessible to any authenticated user)
+    Route::get('/payment/esewa/success', [EsewaPaymentController::class, 'success'])->name('payment.esewa.success');
+    Route::get('/payment/esewa/failure', [EsewaPaymentController::class, 'failure'])->name('payment.esewa.failure');
     
     // Renter routes
     Route::middleware('role:renter')->group(function () {
         Route::get('/checkout/{room}', [BookingController::class, 'checkout'])->name('bookings.checkout');
         Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+        
+        // eSewa payment routes
+        Route::post('/payment/esewa/initiate', [EsewaPaymentController::class, 'initiate'])->name('payment.esewa.initiate');
     });
     
     // Owner routes
@@ -55,6 +63,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/bookings/{booking}/reject', [AdminBookingController::class, 'reject'])->name('bookings.reject');
         Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
         Route::post('/settings/payment-qr', [AdminSettingController::class, 'updatePaymentQr'])->name('settings.update-payment-qr');
+        Route::post('/settings/esewa', [AdminSettingController::class, 'updateEsewa'])->name('settings.update-esewa');
     });
 });
 
