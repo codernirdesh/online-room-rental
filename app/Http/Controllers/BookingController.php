@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\Setting;
+use App\Services\EsewaPaymentService;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -20,8 +21,9 @@ class BookingController extends Controller
         }
 
         $paymentQr = Setting::get('payment_qr');
+        $esewaEnabled = EsewaPaymentService::isEnabled();
 
-        return view('bookings.checkout', compact('room', 'paymentQr'));
+        return view('bookings.checkout', compact('room', 'paymentQr', 'esewaEnabled'));
     }
 
     /**
@@ -50,6 +52,7 @@ class BookingController extends Controller
             'renter_id' => auth()->id(),
             'message' => $request->message,
             'status' => 'paid',
+            'payment_method' => 'qr',
             'payment_screenshot' => $screenshotPath,
             'paid_at' => now(),
             'requested_at' => now(),

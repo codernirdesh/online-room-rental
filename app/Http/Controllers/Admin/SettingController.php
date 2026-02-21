@@ -17,8 +17,11 @@ class SettingController extends Controller
     public function index(): View
     {
         $paymentQr = Setting::get('payment_qr');
+        $esewaEnabled = Setting::get('esewa_enabled', '0');
+        $esewaMerchantCode = Setting::get('esewa_merchant_code', 'EPAYTEST');
+        $esewaEnvironment = Setting::get('esewa_environment', 'testing');
 
-        return view('admin.settings.index', compact('paymentQr'));
+        return view('admin.settings.index', compact('paymentQr', 'esewaEnabled', 'esewaMerchantCode', 'esewaEnvironment'));
     }
 
     /**
@@ -42,5 +45,23 @@ class SettingController extends Controller
         Setting::set('payment_qr', $path);
 
         return back()->with('success', 'Payment QR code updated successfully.');
+    }
+
+    /**
+     * Update eSewa payment settings.
+     */
+    public function updateEsewa(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'esewa_enabled' => 'required|in:0,1',
+            'esewa_merchant_code' => 'required|string|max:255',
+            'esewa_environment' => 'required|in:testing,production',
+        ]);
+
+        Setting::set('esewa_enabled', $request->esewa_enabled);
+        Setting::set('esewa_merchant_code', $request->esewa_merchant_code);
+        Setting::set('esewa_environment', $request->esewa_environment);
+
+        return back()->with('success', 'eSewa payment settings updated successfully.');
     }
 }

@@ -9,6 +9,71 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <x-success-alert />
 
+            <!-- eSewa Payment Settings -->
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-xl">
+                <div class="p-8">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                            eSewa Payment Gateway
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Configure eSewa online payment integration. When enabled, renters can pay directly via eSewa.</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('admin.settings.update-esewa') }}" class="space-y-5">
+                        @csrf
+
+                        <!-- Enable/Disable Toggle -->
+                        <div>
+                            <label for="esewa_enabled" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">eSewa Payment</label>
+                            <select id="esewa_enabled" name="esewa_enabled"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500">
+                                <option value="0" {{ ($esewaEnabled ?? '0') == '0' ? 'selected' : '' }}>Disabled</option>
+                                <option value="1" {{ ($esewaEnabled ?? '0') == '1' ? 'selected' : '' }}>Enabled</option>
+                            </select>
+                            @error('esewa_enabled')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Merchant Code -->
+                        <div>
+                            <label for="esewa_merchant_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Merchant Code (Product Code)</label>
+                            <input type="text" id="esewa_merchant_code" name="esewa_merchant_code"
+                                value="{{ old('esewa_merchant_code', $esewaMerchantCode ?? 'EPAYTEST') }}"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                                placeholder="EPAYTEST">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Use 'EPAYTEST' for testing. Replace with your eSewa merchant code for production.</p>
+                            @error('esewa_merchant_code')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Environment -->
+                        <div>
+                            <label for="esewa_environment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Environment</label>
+                            <select id="esewa_environment" name="esewa_environment"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500">
+                                <option value="testing" {{ ($esewaEnvironment ?? 'testing') == 'testing' ? 'selected' : '' }}>Testing (Sandbox)</option>
+                                <option value="production" {{ ($esewaEnvironment ?? 'testing') == 'production' ? 'selected' : '' }}>Production (Live)</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Use 'Testing' for development. Switch to 'Production' when going live.</p>
+                            @error('esewa_environment')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="pt-2">
+                            <button type="submit" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                                Save eSewa Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Payment QR Code Settings -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-xl">
                 <div class="p-8">
