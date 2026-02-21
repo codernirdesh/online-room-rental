@@ -1,19 +1,19 @@
 <x-guest-layout>
+    <div class="mb-4 text-center">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Set New Password</h2>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Enter your new password below.
+        </p>
+    </div>
+
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <!-- Email Address (hidden, from session) -->
+        <input type="hidden" name="email" value="{{ $email }}">
 
         <!-- Password -->
-        <div class="mt-4">
+        <div>
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Min 8 characters with uppercase, lowercase, number & symbol.</p>
